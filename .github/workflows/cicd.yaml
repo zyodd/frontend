@@ -1,4 +1,4 @@
-name: Frontend CI/CD
+name: Deploy with Docker-Compose
 
 on:
   push:
@@ -12,11 +12,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build frontend Docker image
-        run: docker build -t frontend:latest .
-
-      - name: Deploy frontend with docker-compose
+      - name: Deploy with docker-compose
         run: |
           cd /home/abdelrahman-alzyoud/Desktop/ZYOUD/DevOps/OPTIMUM---DevOps-TASKS/CI.CD/
-          docker compose up -d --build frontend
+          docker compose up -d --build
 
