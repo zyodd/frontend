@@ -1,0 +1,24 @@
+name: Run Docker Compose
+
+# Trigger workflow on push to master branch or manual trigger
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  run-compose:
+    runs-on: [self-hosted, local-docker]
+
+    steps:
+      # Step 1: Checkout the frontend repository
+      - name: Checkout frontend repo
+        uses: actions/checkout@v3
+
+      # Step 2: Run docker-compose
+      - name: Run docker-compose
+        working-directory: ../   # Move up to the CI.CD folder containing docker-compose.yaml
+        run: |
+          docker compose up -d
+
