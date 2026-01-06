@@ -1,0 +1,46 @@
+name: Build, Push, Deploy (Local Compose)
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push Frontend
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/zyodd/frontend:latest
+
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Login to GHCR (local machine)
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Restart docker compose (no conflicts)
+        run: |
+          cd /home/abdelrahman-alzyoud/Desktop/ZYOUD/DevOps/Docker/taskapp-deploy
+          docker compose -p taskapp down --remove-orphans
+          docker compose -p taskapp pull
+          docker compose -p taskapp up -d
+          docker compose -p taskapp ps
