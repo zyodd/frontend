@@ -40,8 +40,11 @@ jobs:
       - name: Restart docker compose (no conflicts)
         run: |
           cd /home/abdelrahman-alzyoud/Desktop/ZYOUD/DevOps/Docker/taskapp-deploy
-          docker compose down frontend || true 
+          docker compose stop frontend || true
+          docker compose rm -f frontend || true
+          
           dokcer container prune
           docker image prune -a
           docker system prune -a
+          
           docker compose up -d frontend || true
