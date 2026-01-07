@@ -40,7 +40,8 @@ jobs:
       - name: Restart docker compose (no conflicts)
         run: |
           cd /home/abdelrahman-alzyoud/Desktop/ZYOUD/DevOps/Docker/taskapp-deploy
-          docker compose -p taskapp down --remove-orphans
-          docker compose -p taskapp pull
-          docker compose -p taskapp up -d
-          docker compose -p taskapp ps
+          docker compose down frontend || true 
+          dokcer container prune -a 
+          docker image prune -a -l 
+          docker system prune -a -l 
+          docker compose up -d frontend || true
