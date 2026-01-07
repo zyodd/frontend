@@ -43,7 +43,7 @@ jobs:
           docker compose stop frontend || true
           docker compose rm -f frontend || true
           
-          dokcer container prune
+          docker container prune
           docker image prune -a
           docker system prune -a
           
